@@ -4,7 +4,7 @@ from functions.loss_functions import SquareLoss
 from functions.activation_functions import Sigmoid
 
 
-class Perceptron2:
+class Perceptron:
     """
     Parameters
     -------
