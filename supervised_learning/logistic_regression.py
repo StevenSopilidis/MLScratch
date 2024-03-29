@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from Functions.loss_functions import Sigmoid
+from functions.activation_functions import Sigmoid
 
 class LogisticRegression():
     """
