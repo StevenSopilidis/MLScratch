@@ -21,11 +21,12 @@ class Perceptron:
 
     def fit(self, X, y):
         _, n_features = np.shape(X)
+        _, n_outputs = np.shape(y)
         
         limit = 1 / math.sqrt(n_features)
         # init weights using uniform distribution
-        self.W = np.random.uniform(-limit, limit, (n_features))
-        self.bias = 1
+        self.W = np.random.uniform(-limit, limit, (n_features, n_outputs))
+        self.bias = np.zeros((1, n_outputs))
 
         for i in range(self.n_iterations):
             dot = X.dot(self.W) + self.bias
@@ -35,7 +36,7 @@ class Perceptron:
             error_gradient = self.loss.gradient(y, y_pred) * self.activation_function.gradient(dot)
             # update weights
             w_gradient = X.T.dot(error_gradient)
-            bias_gradient = self.bias * error_gradient
+            bias_gradient = np.sum(error_gradient, axis=0, keepdims=True)
 
             self.W -= self.learning_rate * w_gradient
             self.bias -= self.learning_rate * bias_gradient
