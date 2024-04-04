@@ -3,30 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from utils.data_manipulation import train_test_split
-from supervised_learning.knn import KNN
-from sklearn.metrics import accuracy_score
+from supervised_learning.regression import PolynomialRegression, Regularization
+from sklearn.metrics import mean_squared_error
+from sklearn.datasets import make_regression
 
-# Load Iris dataset
-iris = load_iris()
-X = iris.data
-y = iris.target
+X, y = make_regression(n_samples=100, n_features=1, noise=20)
 
-# Split data into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
 
-# Initialize KNN classifier
-# knn = KNeighborsClassifier(n_neighbors=3)  # K=3, you can change it according to your preference
+n_samples, n_features = np.shape(X)
 
-# Train the classifier
-# knn.fit(X_train, y_train)
+model = PolynomialRegression(regularization=Regularization.L2, lamda=5)
 
-# Predict on the test data
-# y_pred = knn.predict(X_test)
+model.fit(X_train, y_train)
 
-knn = KNN(k = 5)
-knn.fit(X_train, y_train)
-y_pred = knn.predict(X_test)
-
-# Calculate accuracy
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
+y_pred = model.predict(X_train)
+print(mean_squared_error(y_train, y_pred))

@@ -1,5 +1,7 @@
 import numpy as np
 from typing import Tuple
+from itertools import combinations_with_replacement
+
 
 def shuffle_data(X: np.array,y: np.array, seed=None) -> Tuple[np.array,np.array]:
     """
@@ -187,3 +189,29 @@ def train_test_split(X: np.array,y: np.array,test_size: float=0.5,seed=None):
     X_train,X_test = X[:split_i],X[split_i:]
     y_train,y_test = y[:split_i],y[split_i:]
     return X_train,X_test,y_train,y_test
+
+def polynomial_features(X: np.array, degree: int):
+    """
+    Function for generating polynomial features from dataset
+
+    Parameters:
+    -------
+    X: dataset
+    degree: polynomial degree
+    """
+
+    n_samples, n_features = np.shape(X)
+
+    def index_combinations():
+        combs = [combinations_with_replacement(range(n_features), i) for i in range(0, degree + 1)]
+        flat_combs = [item for sublist in combs for item in sublist]
+        return flat_combs
+    
+    combinations = index_combinations()
+    n_output_features = len(combinations)
+    X_new = np.empty((n_samples, n_output_features))
+    
+    for i, index_combs in enumerate(combinations):  
+        X_new[:, i] = np.prod(X[:, index_combs], axis=1)
+
+    return X_new
