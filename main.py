@@ -8,28 +8,23 @@ from supervised_learning.ada_boost import AdaBoost
 from sklearn.metrics import mean_squared_error
 from sklearn.datasets import make_regression
 from sklearn import datasets
+from unsupervised_learning.pca import PCA
+import numpy.random as rnd
 
 
-data = datasets.load_digits()
-X = data.data
-y = data.target
 
-digit1 = 1
-digit2 = 8
-idx = np.append(np.where(y == digit1)[0], np.where(y == digit2)[0])
-y = data.target[idx]
-# Change labels to {-1, 1}
-y[y == digit1] = -1
-y[y == digit2] = 1
-X = data.data[idx]
+mu = np.array([10,13])
+sigma = np.array([[3.5, -1.8], [-1.8,3.5]])
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5)
+# print("Mu ", mu.shape)
+# print("Sigma ", sigma.shape)
 
+# Create 1000 samples using mean and sigma
+org_data = rnd.multivariate_normal(mu, sigma, size=(1000))
+# print("Data shape ", org_data.shape)
 
-# Adaboost classification with 5 weak classifiers
-clf = AdaBoost(n_clfs=5)
-clf.fit(X_train, y_train)
-y_pred = clf.predict(X_test)
-
-accuracy = accuracy_score(y_test, y_pred)
-print ("Accuracy:", accuracy)
+pca = PCA(1)
+projected = pca.fit(org_data)
+print("Compressed Data shape ", projected.shape)
+original = pca.inverse_transform(projected)
+print("Compressed Data shape ", original.shape)
